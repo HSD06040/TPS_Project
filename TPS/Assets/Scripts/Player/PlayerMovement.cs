@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -41,19 +43,24 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 mouseDir = GetMouseDirection();
 
+        //  x축의 경우라면 제한을 걸 필요 없음
         _currentRotation.x += mouseDir.x;
 
+        // y축의 경우엔 각도 제한을 걸어야 함.
         _currentRotation.y = Mathf.Clamp(
             _currentRotation.y + mouseDir.y,
             _minPitch,
             _maxPitch
             );
 
+        // 캐릭터 오브젝트의 경우에는 Y축 회전만 반영
         transform.rotation = Quaternion.Euler(0, _currentRotation.x, 0);
 
+        // 에임의 경우 상하 회전 반영
         Vector3 currentEuler = _aim.localEulerAngles;
         _aim.localEulerAngles = new Vector3(_currentRotation.y, currentEuler.y, currentEuler.z);
 
+        // 회전 방향 벡터 반환
         Vector3 rotateDirVector = transform.forward;
         rotateDirVector.y = 0;
         return rotateDirVector.normalized;
@@ -79,13 +86,14 @@ public class PlayerMovement : MonoBehaviour
 
         return new Vector2(mouseX, mouseY);
     }
-
+    
+    // 벡터 그림 (수업 후)
     public Vector3 GetMoveDirection()
     {
         Vector3 input = GetInputDirection();
 
         Vector3 direction =
-           (transform.right * input.x) +
+           (transform.right * input.x) + 
            (transform.forward * input.z);
 
         return direction.normalized;
@@ -99,3 +107,21 @@ public class PlayerMovement : MonoBehaviour
         return new Vector3(x, 0, z);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -19,16 +19,19 @@ public class PlayerController : MonoBehaviour
     private void Update() => HandlePlayerControl();
     private void OnDisable() => UnsubscribeEvents();
 
-
+    /// <summary>
+    /// 초기화용 함수, 객체 생성시 필요한 초기화 작업이 있다면 여기서 수행한다.
+    /// </summary>
     private void Init()
     {
         _status = GetComponent<PlayerStatus>();
         _movement = GetComponent<PlayerMovement>();
+        // _mainCamera = Camera.main.gameObject;
     }
 
     private void HandlePlayerControl()
     {
-        if (!IsControlActivate) return;
+        if (!IsControlActivate) return; 
 
         HandleMovement();
         HandleAiming();
@@ -67,3 +70,17 @@ public class PlayerController : MonoBehaviour
         _status.IsAiming.Unsubscribe(_aimCamera.gameObject.SetActive);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,26 +1,49 @@
 using System;
+using UnityEngine;
 
-public class ObservableProperty<T>
+namespace DesignPattern
 {
-    private T _value;
-    public T Value { get => _value; set { if(!_value.Equals(value)) _value = value; onValueChanged?.Invoke(Value); } }
-
-    private Action<T> onValueChanged;
-
-    public ObservableProperty(T value = default)
+    public class ObservableProperty<T>
     {
-        _value = value;
-    }
-
-    public void Subscribe(Action<T> action) => onValueChanged += action;
-
-    public void Unsubscribe(Action<T> action) => onValueChanged -= action;
-
-    public void UnSubscribeAll()
-    {
-        foreach (Action<T> action in onValueChanged.GetInvocationList())
+        [SerializeField] private T _value;
+        public T Value
         {
-            onValueChanged -= action;
+            get => _value;
+            set
+            {
+                if (_value.Equals(value)) return;
+                _value = value;
+                Notify();
+            }
+        }
+        private Action<T> _onValueChanged;
+
+        public ObservableProperty(T value = default)
+        {
+            _value = value;
+        }
+
+        public void Subscribe(Action<T> action)
+        {
+            _onValueChanged += action;
+        }
+
+        public void Unsubscribe(Action<T> action)
+        {
+            _onValueChanged -= action;
+        }
+
+        public void UnsbscribeAll()
+        {
+            foreach (Action<T> action in _onValueChanged.GetInvocationList())
+            {
+                _onValueChanged -= action;
+            }
+        }
+
+        private void Notify()
+        {
+            _onValueChanged?.Invoke(Value);
         }
     }
 }
